@@ -2,6 +2,12 @@ use sdl2::rect::Rect;
 use sdl2::pixels::Color;
 use sdl2::event::Event;
 
+mod view;
+use view::board_view;
+
+mod model;
+use model::game::BoardPiece;
+
 fn main() -> Result<(), String> {
 
     let screen_width = 800;
@@ -16,9 +22,12 @@ fn main() -> Result<(), String> {
     let mut canvas = window.into_canvas()
         .build()
         .unwrap();
-    let screen_area = Rect::new(0, 0, screen_width, screen_height);
-    let clear_color = Color::RGB(64, 192, 255);
-    canvas.set_draw_color(clear_color);
+    let board_view: board_view::Renderer = board_view::Renderer { 
+        screen_area: Rect::new(0, 0, screen_width, screen_height), 
+        clear_color: Color::RGB(64, 192, 255), 
+    };
+
+    let test_piece: BoardPiece = BoardPiece::Black;
 
     let mut running = true;
     let mut event_queue = sdl_context.event_pump().unwrap();
@@ -44,7 +53,7 @@ fn main() -> Result<(), String> {
             }
         }
 
-        canvas.fill_rect(screen_area);
+        board_view.render(&mut canvas);
         canvas.present();
     }
 
