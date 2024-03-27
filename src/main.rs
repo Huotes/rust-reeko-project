@@ -6,7 +6,8 @@ mod view;
 use view::board_view;
 
 mod model;
-use model::game::BoardPiece;
+use model::game::make_blank_board;
+use model::game::GameState;
 
 fn main() -> Result<(), String> {
 
@@ -27,7 +28,11 @@ fn main() -> Result<(), String> {
         clear_color: Color::RGB(64, 192, 255), 
     };
 
-    let test_piece: BoardPiece = BoardPiece::Black;
+    let mut game_state: GameState = GameState {board: make_blank_board() };
+
+    game_state.print_board();
+    game_state.jumble_board();
+    game_state.print_board();
 
     let mut running = true;
     let mut event_queue = sdl_context.event_pump().unwrap();
@@ -40,15 +45,6 @@ fn main() -> Result<(), String> {
                 Event::Quit {..} => {
                     running = false;
                 },
-
-                Event:: MouseMotion {
-                    x, y, xrel, yrel, .. } => {
-
-                        println!("Mouse x: {}, y: {}", x, y);
-                        println!("Relative x: {}, y: {}", xrel, yrel);
-
-                    },
-
                 _ => {}
             }
         }
